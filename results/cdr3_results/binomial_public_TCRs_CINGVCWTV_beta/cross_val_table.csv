@@ -1,0 +1,8 @@
+,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,hyperparameters,roc,roc
+,vj_dropout,v_gene_embed_dim,seq_strides,seq_kernel_widths,seq_filters,seq_embed_dim,seq_dropout_conv,seq_dilations,seq_L2_conv,pred_units,pred_n_classes,pred_dropout,max_len_l,max_len_h,lr,j_gene_embed_dim,input_list,init_bias,batch_size,mu,sigma
+0,0.3,16,"[1, 3, 3]","[5, 4, 4]","[64, 128, 256]",16,0.3,"[1, 1, 1]",0.01,[],2,0.3,40,40,0.001,8,"['TRB_v_gene', 'TRB_j_gene', 'TRB_cdr3']",0.0,32,0.7580534022394487,0.08312241980822893
+1,0.3,16,"[1, 3, 3]","[5, 4, 4]","[64, 128, 256]",16,0.3,"[1, 1, 1]",0.01,[],2,0.3,40,40,0.0005,8,"['TRB_v_gene', 'TRB_j_gene', 'TRB_cdr3']",0.0,32,0.7989664082687338,0.06851439041545473
+2,0.3,16,"[1, 3, 3]","[5, 4, 4]","[64, 128, 256]",16,0.3,"[1, 1, 1]",0.01,[],2,0.3,40,40,0.0001,8,"['TRB_v_gene', 'TRB_j_gene', 'TRB_cdr3']",0.0,32,0.7782945736434108,0.06938806476858017
+3,0.3,16,"[1, 3, 3]","[5, 4, 4]","[64, 128, 256]",16,0.3,"[1, 1, 1]",0.01,[],2,0.3,40,40,0.001,8,"['TRB_v_gene', 'TRB_j_gene', 'TRB_cdr3']",0.0,256,0.757192075796727,0.08193808907211549
+4,0.3,16,"[1, 3, 3]","[5, 4, 4]","[64, 128, 256]",16,0.3,"[1, 1, 1]",0.01,[],2,0.3,40,40,0.0005,8,"['TRB_v_gene', 'TRB_j_gene', 'TRB_cdr3']",0.0,256,0.7669250645994831,0.0921637003057815
+5,0.3,16,"[1, 3, 3]","[5, 4, 4]","[64, 128, 256]",16,0.3,"[1, 1, 1]",0.01,[],2,0.3,40,40,0.0001,8,"['TRB_v_gene', 'TRB_j_gene', 'TRB_cdr3']",0.0,256,0.7273040482342807,0.11753473928906277
