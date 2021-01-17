@@ -1,0 +1,223 @@
+
+Usage for the scripts used to train and save models as used in the manuscript, as well as generation of manuscript figures.
+
+In general, those seeking to use TCRAI models on their own data or to test their own hypotheses are advised to look at the example in notebooks/simple_binomial_example.ipynb.
+
+Scripts can be used as command line tools: python /path/to/script.py [options]
+One can always get the usage instructions by running python path/to/script.py --help
+
+Help text for the scripts is provided below with some small descriptions.
+
+
+
+Training & saving:
+--------------------
+ - train_tcr_case.py
+ 
+     This script will train a single model, on a single dataset.
+     usage: train_tcr_case.py [-h] [-o DIR_OUT] [-mode MODE] [-pmhc PMHC_DO] [-model_type MODEL_TYPE] [-folds FOLDS]
+                         [-multinomial_ids MULTINOMIAL_IDS] [--randomize]
+                         data_path
+
+    positional arguments:
+      data_path             path to data (csv file)
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o DIR_OUT            path at which to save data, if not provided, outputs to terminal and plots shown, but nothing saved.
+      -mode MODE            `binomial` or `multinomial`, default=multinomial
+      -pmhc PMHC_DO         specific pmhc code to train model for if in binomial mode - fails if not provided when running in binomial mode
+      -model_type MODEL_TYPE
+                            specific inputs only options are full : V/J genes + CDR3 of alpha / beta chains alpha : V/J genes + CDR3 of alpha chain
+                            only beta : V/J genes + +CDR3 of beta chain only seq : CDR3 of alpha and beta chains gene : V/J genes of alpha and beta
+                            chains only beta_cdr3: CDR3 of the beta chain only defaults to `full`
+      -folds FOLDS          number of MCCV folds to perform, default = 10
+      -multinomial_ids MULTINOMIAL_IDS
+                            either: `all`, `shared_by_all` or `shared_by_final`, or ``public_key`. default=`shared_by_all`
+      --randomize           Perform in non-reproducible way
+     
+     
+     
+ 
+ - train_tcr_binomial_multinomial_loop.py
+ 
+     This is the main script used to train and save models for all the various cases of model in the manuscript. It simply loops over the binomial models (for all pmhcs), and the various versions of the multinomial models, for a given dataset, and choice of model_type.
+     
+     usage: train_tcr_binomial_multinomial_loop.py [-h] [-o DIR_OUT] [-model_type MODEL_TYPE] [-folds FOLDS] [--randomize] data_path
+
+    positional arguments:
+      data_path             path to data (csv)
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o DIR_OUT            path at which to save data, if not provided, outputs to terminal and plots shown, but nothing saved.
+      -model_type MODEL_TYPE
+                            specific inputs only options are full : V/J genes + CDR3 of alpha / beta chains alpha : V/J genes + CDR3 of alpha chain
+                            only beta : V/J genes + +CDR3 of beta chain only seq : CDR3 of alpha and beta chains gene : V/J genes of alpha and beta
+                            chains only beta_cdr3: CDR3 of the beta chain only loop_key_models: will loop through full, alpha, beta type models
+                            defaults to `full`
+      -folds FOLDS          number of MCCV folds to perform, default = 5
+      --randomize           Perform in non-reproducible way
+      
+      We used folds=5 for the results of the paper.
+      
+      We therefore ran:
+      python path/to/train_tcr_binomial_multinomial_loop.py path/to/data/dataset_of_choice.csv -o path/to/save_location -model_type full -folds 5
+      And we vary the dataset between: public_TCRs.csv, and CNN-prediction-with-REGN-pilot-version-2.csv
+      Model_type is chosen as full/beta/alpha/gene 
+      
+Results analysis:
+-------------------
+
+When training, the models themselves, and the prediction results on the training and testing sets are saved. We can then analyze the results from each use case by later loading the results and/or the models and rerunnning them. Model train/test results can be found in results/, and used to generate ROC plots. Data_path for these scripts should point to the directory storing saved results from trained models. For this repo, that would be e.g results/cdr3_restuls/.
+
+We collect the predicitive performance analytics as csv using results_to_table.py
+
+ - results_to_table.py
+    usage: results_to_table.py [-h] [-o OUT_DIR] [-ds DS] [-model_type MODEL_TYPE] [--roc] data_path
+
+    positional arguments:
+      data_path             path to all saved data
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o OUT_DIR            output directory, default is current
+      -ds DS                name of the dataset to get results for
+      -model_type MODEL_TYPE
+                            name of the model type: full, alpha, beta etc
+      --roc                 also save the fine-scale ROC table
+      
+    note that the data_path should be a path to the saved training reults from train_tcr_multinomial_binomial_loop.py, there there will be subdirectories for each model type. By specifying the datatset with -ds and model_type with -model_type, the script will load results for models trained on that datatset, for that type of model.
+    
+ - stacked_binomial_plot.py
+     Plots the binomial model ROC curves for one model type and one dataset onto one plot
+     
+     usage: stacked_binomial_plot.py [-h] [-o OUT_DIR] [-ds DS] [-model_type MODEL_TYPE] [-ext EXT] data_path
+
+    positional arguments:
+      data_path             path to all saved data
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o OUT_DIR            output directory, default is current
+      -ds DS                name of the dataset to get results for
+      -model_type MODEL_TYPE
+                            name of the model type: full, alpha, beta etc
+      -ext EXT              figure filetype extension
+ 
+ - multinomial_plot.py
+     usage: multinomial_plot.py [-h] [-o OUT_DIR] [-ds DS] [-model_type MODEL_TYPE] [-selection SELECTION] [-ext EXT] data_path
+
+    positional arguments:
+      data_path             path to all saved data
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o OUT_DIR            output directory, default is current
+      -ds DS                name of the dataset to get results for
+      -model_type MODEL_TYPE
+                            name of the model type: full, alpha, beta etc
+      -selection SELECTION  which pmhc selection used a runtime to plot: - `all`: all pmhcs - `shared_by_final` - `shared_by_all`
+      -ext EXT              figure filetype extension
+
+      
+
+Motif Analysis
+--------------
+
+Multiple scripts were used to plot TCRAI fingerprints for different cases: Binder vs non-binder plots, identification of clusters of Strong-True-Positive binders and clustering of them to form fasta files of aligned motifs. These scripts require saved pretrained models. Due to the size of the models, we do not include all pre-trained models in the repository. However one can train and save models on the data used in the manuscript using the figures above, and subsequently use those saved model with these scripts. 
+
+ - fingerprint_plot.py
+ 
+    usage: fingerprint_plot.py [-h] [-o OUT_DIR] [-ds DS] [-model_type MODEL_TYPE] [-pmhc PMHC] [-select SELECTION_TYPE] [--standardize]
+                           data_path train_data_path
+
+    positional arguments:
+      data_path             path to all saved (post-testing/model) data
+      train_data_path       path to data used for training
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o OUT_DIR            output directory, default is current
+      -ds DS                name of the dataset trained model to use [e.g public_TCRs]
+      -model_type MODEL_TYPE
+                            name of the model type: full, alpha, beta etc
+      -pmhc PMHC            pmhc the model should hvae been trained on
+      -select SELECTION_TYPE
+                            the type of inputs to be selected : 
+                            all : all inputs 
+                            gene : just the genes 
+                            cdr3s : just the CDR3s 
+                            beta_cdr3 :just the beta chain_cdr3
+      --standardize         apply z score norm to z
+ 
+ 
+ - motif_kmeans.py
+     usage: motif_kmeans.py [-h] [-o OUT_DIR] [-ds DS] [-model_type MODEL_TYPE] [-pmhc PMHC] [-select SELECTION_TYPE] [--standardize] [--save_csvs]
+                           data_path train_data_path
+
+    positional arguments:
+      data_path             path to all saved (post-testing/model) data
+      train_data_path       path to data used for training
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o OUT_DIR            output directory, default is current
+      -ds DS                name of the dataset to get results for
+      -model_type MODEL_TYPE
+                            name of the model type: full, alpha, beta etc
+      -pmhc PMHC            pmhc to study
+      -select SELECTION_TYPE
+                            the type of inputs to be selected : all : all inputs gene : just the genes cdr3s : just the CDR3s beta_cdr3 : just the
+                            beta chain_cdr3
+      --standardize         apply z score norm to z
+      --save_csvs           save clustered TCRs into csv
+
+ 
+ 
+Comparing different model types
+
+
+Compare the fingerprint space of model trained on different datasets, but with the same pMHC. This allows one to see how the models differently arrange TCRs in their fingerprint space, and assess whether there are any biases between the data.
+
+ - cluster_inference.py
+     usage: cluster_inference.py [-h] [-o OUT_DIR] [-ds DS] [-infer_ds INFER_DS] [-model_type MODEL_TYPE] [-pmhc PMHC] [-select SELECTION_TYPE]
+                                [--standardize]
+                                data_path train_data_path
+
+    positional arguments:
+      data_path             path to all saved (post-testing/model) data
+      train_data_path       path to data used for training
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o OUT_DIR            output directory, default is current
+      -ds DS                name of the dataset trained model to use
+      -infer_ds INFER_DS    name of the dataset to get results for
+      -model_type MODEL_TYPE
+                            name of the model type: full, alpha, beta etc
+      -pmhc PMHC            pmhc to study
+      -select SELECTION_TYPE
+                            the type of inputs to be selected : all : all inputs gene : just the genes cdr3s : just the CDR3s beta_cdr3 : just the
+                            beta chain_cdr3
+      --standardize         apply z score norm to z
+ 
+ 
+Compare models trained using the full input (CDR3s and genes from both chains), vs gene-only models (genes of both chains).
+ - full_gene_compare.py
+    usage: full_gene_compare.py [-h] [-o OUT_DIR] data_path gene_data_path tables_path
+
+    positional arguments:
+      data_path       path to all tabularized results
+      gene_data_path  path to all saved (post-testing/model) data for gene only models
+      tables_path     path to summary tables of results
+
+    optional arguments:
+      -h, --help      show this help message and exit
+      -o OUT_DIR      output directory, default is current
+
+
+Gene usage analysis
+
+
+The method used to assess/plot differences in gene usage between different groups of TCRs can be found in the notbook notebook/gene_usage.py
