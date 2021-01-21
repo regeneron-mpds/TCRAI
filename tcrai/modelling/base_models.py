@@ -560,7 +560,7 @@ class BaseXCRModel(keras.Model, ABC):
             elif sel in self.extra_encoders:
                 vals.append(self.extra_encoders[sel](inputs[sel],training=training))
             else:
-                raise RunTimeError("unknown selection key passed")
+                raise RuntimeError("unknown selection key passed")
         
         if len(vals)>1:
             z = self.z_concat(vals)
