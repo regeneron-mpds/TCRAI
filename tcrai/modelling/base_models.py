@@ -55,9 +55,9 @@ class BaseXCRModelWithProcessors(ABC):
     
     parameters
     -----------
-    model: (bcrai.modelling.base_models.BaseXCRModel subclass) 
+    model: (tcrai.modelling.base_models.BaseXCRModel subclass) 
             A BaseXCRModel subclass model.
-    processors: (dict of bcrai.modelling.processors Processor) 
+    processors: (dict of tcrai.modelling.processors Processor) 
             A dict with form {name of expected model input : a processor object}
     extra_tokenizers: (dict of keras.tokenizers) 
             A dict with form  {name of expected model input : a keras tokenizer}
@@ -318,7 +318,7 @@ class BaseXCRModelWithProcessors(ABC):
                 try:
                     z.append(self.model.extra_encoders[sel](in_dict[sel]).numpy())
                 except:
-                    raise RunTimeError("BCRAI ERROR: unknown input key passed to Model")
+                    raise RuntimeError("TCRAI ERROR: unknown input key passed to Model")
        
         return np.hstack(z)    
             
