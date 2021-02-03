@@ -47,6 +47,15 @@ class CrossValidator:
     This object can be used to perform e.g K fold cross-val, and monte carlo cross-val, by
     choosing the appropriate `splitter` for the type of cross-validation wanted.
     
+    Use the method train() to perform cross-validation of the model type specified by model_builder.
+    
+    The best performing model is saved in CrossValidator.best_model. One can also access the results
+    of cross-validation; the hyperparamters used and the results over each set, in the pandas dataframe
+    stored in CrossValidator.results_table. The value of CrossValidator.best_hp_idx specifies the index
+    of the row in CrossValidator.results_table which was best performing, and corresponds the 
+    hyperparameters used for retraining the model with the full training set (validation data only used
+    for early stopping).
+    
     parameters
     ------------
     splitter: sklearn.model_selection Splitter class 
@@ -307,13 +316,6 @@ class CrossValidator:
               key_evaluation='roc',
               apply_clearing=True):
         """ Train the model using the cross-validation technique of the class
-        
-        Cross-val is applied. and then retrain model with the best hp, and save...
-        
-        After training, one can access a table of hyperparameters and the model performance, which are stored
-        in the classs by calling...
-        
-        The best model is ...
         
         parameters
         -----------
