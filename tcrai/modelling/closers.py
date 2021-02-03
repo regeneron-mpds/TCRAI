@@ -14,7 +14,7 @@
 """ Module for final blocks of networks, to 'close' the network, features to an output 
 
 All `closer` functions should return a tf.keras.Model, and take a single non-keyword 
-argument - hp : containing a dict of the 
+argument - hp : containing a dict of the hyperparameters
 
 """
 import tensorflow as tf
