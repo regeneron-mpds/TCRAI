@@ -39,6 +39,8 @@ conda activate my_env
 
 pip install /path/to/tcrai
 
+(This path should be the directory where setup.py lives, i.e ending /TCRAI/)
+
 
 Python Version
 
@@ -62,6 +64,14 @@ Several python scripts are provided that will train and save models specific to 
 The scripts used to generate figure in the paper are collected in scripts/, they are designed to work with the csv data used for this manuscript. The scripts are command line tools, descriptions of the runtime options and inputs for command line use can be found using python /path/to/script.py --help, or alternatively they are provided in scripts/help.txt.
 
 We have done our best to ensure cross-system reproducibility across systems by setting the random seeds of the various libraries used in the code to specific values. It may be possible that there remain some cross-system differences, particularly for GPU v CPU differences.
+
+Citation
+---------
+
+If you use TCRAI in your research, please cite:
+
+Zhang, Wen, et al. "A framework for highly multiplexed dextramer mapping and prediction of T cell receptor sequences to antigen specificity." Science Advances 7.20 (2021): eabf5835
+
 
 License
 --------
