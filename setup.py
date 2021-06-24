@@ -15,7 +15,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="TCRAI",
-    version="0.1.0",
+    version="0.1.1",
     packages=find_packages(),
 
     install_requires=[
@@ -23,6 +23,7 @@ setup(
         "scikit-learn==0.22.1",
         "seaborn==0.10.1",
         "umap-learn==0.4.4",
+        "numba==0.52.0",
         "tensorflow==2.3.0",
         "weblogo==3.7.5"
     ],
